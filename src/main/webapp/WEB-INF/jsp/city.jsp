@@ -9,13 +9,15 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<c:forEach items="${cities}" var="city">
-		<tr>
-			<td>
-				${city.cityName }
-				${city.cityCode }
-			</td>
-		</tr>
-	</c:forEach>
+	<table border="1">
+		<c:forEach items="${cities}" var="city">
+			<tr>
+				<td>
+					${city.cityName }
+					${city.cityCode }
+				</td>
+			</tr>
+		</c:forEach>
+	</table>
 </body>
 </html>
