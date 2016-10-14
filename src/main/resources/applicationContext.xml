@@ -24,10 +24,7 @@
 	http://www.springframework.org/schema/task/spring-task-3.1.xsd	        
 	http://www.springframework.org/schema/cache 
 	http://www.springframework.org/schema/cache/spring-cache.xsd"> 
-
-	<context:component-scan base-package="">  
-        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />   
-    </context:component-scan> 
+	<context:annotation-config/>  
 
 	<!-- 引入配置文件 -->
 	<bean id="propertyConfigurer"
@@ -77,21 +74,23 @@
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<!-- 自动扫描mapping.xml文件 -->
-		<property name="mapperLocations"
-			value="classpath:com/sanmi/app/dao/*.xml"></property>
+		<property name="mapperLocations" value="classpath*:com/eb/dao/*.xml"></property>
 	</bean>
 
 	<!-- DAO接口所在包名，Spring会自动查找其下的类 -->
 	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="basePackage" value="com.sanmi.app.dao" />
+		<property name="basePackage" value="com.eb.dao" />
 		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
 	</bean>
-
+	
 	<!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="dataSource" />
 	</bean>
+	
+	<!-- 支持 @Transactional 标记 -->
+	<tx:annotation-driven/>
 	<!-- 配置事务属性 -->
     <tx:advice id="txAdvice" transaction-manager="transactionManager">
         <tx:attributes>
@@ -114,7 +113,7 @@
     </tx:advice>	
 	<!-- 配置事务的切点,并把事务切点和事务属性关联起来 -->
     <aop:config>
-        <aop:pointcut expression="execution(* com.sanmi.app.service.*.*(..))" id="txPointCut"/>
+        <aop:pointcut expression="execution(* com.eb.service.*.*(..))" id="txPointCut"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointCut"/>
     </aop:config>    
 
@@ -135,30 +134,19 @@
 <!--        </property> -->
 <!--    </bean> -->
 
-	<!-- 启用 ehcache -->
-	<!--  缓存  属性-->
-	<bean id="cacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">  
-		<property name="configLocation"  value="classpath:ehcache.xml"/> 
-	</bean> 
-	<!-- 默认是cacheManager -->
-	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">  
-		<property name="cacheManager"  ref="cacheManagerFactory"/>  
-	</bean>  	
-	<!-- 支持缓存注解 -->
-	<cache:annotation-driven cache-manager="cacheManager" />
 	
 	<!-- MongoDB GridFS Template -->
-	<mongo:db-factory host="${mongoIp}" port="${mongoPort}" dbname="${mongoDbname}" />
-	<mongo:mapping-converter id="converter" db-factory-ref="mongoDbFactory"/>
+<!-- 	<mongo:db-factory host="${mongoIp}" port="${mongoPort}" dbname="${mongoDbname}" /> -->
+<!-- 	<mongo:mapping-converter id="converter" db-factory-ref="mongoDbFactory"/> -->
 	 
-	<bean id="gridfsTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate">
-	  <constructor-arg ref="mongoDbFactory"/>
-	  <constructor-arg ref="converter"/>
-	</bean>		
+<!-- 	<bean id="gridfsTemplate" class="org.springframework.data.mongodb.gridfs.GridFsTemplate"> -->
+<!-- 	  <constructor-arg ref="mongoDbFactory"/> -->
+<!-- 	  <constructor-arg ref="converter"/> -->
+<!-- 	</bean>		 -->
 	
 	<!-- 定时任务 ：优惠券、团购、促销、预约数据扫描，自动根据日期更新有效状态-->
-	<task:scheduled-tasks>   
+<!-- 	<task:scheduled-tasks>    -->
 		<!--cron格式：秒 ,分 ,小时 ,日期 ,月份 , 星期 -->
-        <task:scheduled ref="taskService" method="updateOrderStatus" cron="0 34 18 ? * *"/>   
-	</task:scheduled-tasks>
+<!--         <task:scheduled ref="taskService" method="updateOrderStatus" cron="0 34 18 ? * *"/>    -->
+<!-- 	</task:scheduled-tasks> -->
 </beans>
