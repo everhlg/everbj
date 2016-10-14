@@ -31,7 +31,7 @@
 	
 	<!-- 定义跳转的文件的前后缀 ，视图模式配置-->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
-		<property name="prefix" value="/jsp/"/>  
+		<property name="prefix" value="/WEB-INF/jsp/"/>  
 		<property name="suffix" value=".jsp"/><!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑  -->  
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView" />  
 	</bean>	
